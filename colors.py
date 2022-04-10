@@ -10,6 +10,9 @@ BLUE  = (0x00, 0x00, 0xFF)
 coral_red = Color(254, 67, 60)
 razzmatazz = Color(243, 29, 100)
 
+# Pink
+pink = Color(255,192,203)
+
 # Greens
 dark_green = Color(0x00, 0x80, 00)
 
@@ -18,6 +21,7 @@ byzantine = Color(162, 36, 173)
 grape = Color(106, 56, 179)
 violet_blue = Color(60, 80, 177)
 vivid_cerulean = Color(0, 149, 239)
+blue_violet = Color(138,43,226)
 
 # Purples
 deep_purple = Color(88, 24, 69)
@@ -29,6 +33,7 @@ beer = Color(246, 151, 23)
 
 # Grays
 outer_space = Color(69, 69, 69)
+silver = Color(192,192,192)
 
 
 def color_clamp(c):
