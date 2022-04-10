@@ -31,6 +31,9 @@ class Planet:
         self.num_rings = num_rings
         self.core = core
 
+    def set_position(self, pos: Vec2):
+        self.position = pos
+
     # Draw the planet to the given screen
     def draw(self, screen):
         pygame.draw.circle(screen, self.color, self.position.get(), self.radius, self.thickness)
