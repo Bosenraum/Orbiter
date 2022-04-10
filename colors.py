@@ -19,6 +19,9 @@ grape = Color(106, 56, 179)
 violet_blue = Color(60, 80, 177)
 vivid_cerulean = Color(0, 149, 239)
 
+# Purples
+deep_purple = Color(88, 24, 69)
+
 # Whites
 alabaster = Color(245, 243, 230)
 white_coffee = Color(228, 225, 209)
