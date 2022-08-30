@@ -38,18 +38,16 @@ class Engine:
         self.et = 0
 
         self.screen = pygame.display.set_mode((self.width, self.height))
-        self.pixels = self.generate_pixels(width, height, pf)
+        self.pixels = []
+        self.generate_pixels(width, height, pf)
 
         self.start()
 
-    @staticmethod
-    def generate_pixels(width, height, pf):
-        pixels = []
+    def generate_pixels(self, width, height, pf):
         for w in range(width):
-            pixels.append([])
+            self.pixels.append([])
             for h in range(height):
-                pixels.append([Pixel(w, h, colors.BLACK, pf)])
-        return pixels
+                self.pixels[w].append(Pixel(w, h, colors.BLACK, pf))
 
     def start(self):
 
@@ -67,5 +65,12 @@ class Engine:
         pass
 
     def on_update(self, elapsed_time):
-        pass
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+
+        self.screen.fill(BLACK)
+        # Draw stuff
+
+        pygame.display.update()
 

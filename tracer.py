@@ -1,4 +1,5 @@
 import pygame
+import pygame.gfxdraw
 from enum import *
 import vector
 from utils import *
@@ -56,13 +57,15 @@ class Tracer:
     def trace(self, screen):
         if self.tracer_type == TracerType.POINT:
             for i, point in enumerate(self.data):
-                pygame.draw.circle(screen, self.calc_color(i), (point.x, point.y), self.width)
+                # pygame.draw.circle(screen, self.calc_color(i), (point.x, point.y), self.width)
+                pygame.gfxdraw.filled_circle(screen, int(point.x), int(point.y), int(self.width), self.calc_color(i))
 
         elif self.tracer_type == TracerType.PLINE:
             for i, point in enumerate(self.data):
                 if i == 0:
                     continue
-                pygame.draw.line(screen, self.calc_color(i), point.get(), self.data[i-1].get(), self.width)
+                # pygame.draw.line(screen, self.calc_color(i), point.get(), self.data[i-1].get(), self.width)
+                pygame.gfxdraw.line(screen, int(point.x), int(point.y), int(self.data[i-1].x), int(self.data[i-1].y), self.calc_color(i))
 
         elif self.tracer_type == TracerType.LINE:
             for i, line in enumerate(self.data):

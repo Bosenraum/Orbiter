@@ -1,4 +1,5 @@
 import pygame
+import pygame.gfxdraw
 import random
 
 from vector import *
@@ -23,8 +24,8 @@ class Planet:
         self.name = name
         self.radius = abs(radius)
         self.position = position
-        self.velocity = velocity if velocity else NULL_VECTOR
-        self.acceleration = acceleration if acceleration else NULL_VECTOR
+        self.velocity = velocity if velocity else NULL_VECTOR_2D
+        self.acceleration = acceleration if acceleration else NULL_VECTOR_2D
         self.thickness = 0 if fill else thickness
         self.mass = mass
         self.color = color
@@ -36,7 +37,7 @@ class Planet:
 
     # Draw the planet to the given screen
     def draw(self, screen):
-        pygame.draw.circle(screen, self.color, self.position.get(), self.radius, self.thickness)
+        pygame.gfxdraw.filled_circle(screen, int(self.position.x), int(self.position.y), int(self.radius), self.color)
         # pygame.draw.circle(screen, self.color, (self.position.x + (2 * self.radius), self.position.y), self.radius, self.thickness)
         radius = self.radius
         i = 1
