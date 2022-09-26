@@ -1,5 +1,6 @@
 import math
-from vector import Vec2
+from engine.vector import Vec2
+
 
 # Calculate the distance between two points
 def calc_distance(pos1, pos2):

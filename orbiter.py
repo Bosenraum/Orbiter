@@ -1,17 +1,13 @@
 import sys
-import math
-import random
 
-import pygame
 import pygame.gfxdraw
 import pygame.freetype
 # from pygame.locals import *
 
-from colors import *
 from tracer import *
 from planet import *
-from utils import *
-from dial import Dial
+from engine.utils import *
+from widgets.dial import Dial
 
 
 def redraw(scr):
@@ -34,16 +30,16 @@ def redraw(scr):
         pygame.gfxdraw.box(scr, r, color)
 
     # Draw targets
-    # pygame.draw.circle(scr, target_color, target_pos.get(), target_radius, 10)
-    # pygame.draw.circle(scr, bullseye_color, bullseye_pos.get(), bullseye_radius, 10)
+    pygame.draw.circle(scr, target_color, target_pos.get(), target_radius, 10)
+    pygame.draw.circle(scr, bullseye_color, bullseye_pos.get(), bullseye_radius, 10)
 
     # Draw moon trace
-    # line_trace.trace(scr)
-    # moon_trace.trace(scr)
-    # planet_trace.trace(scr)
+    line_trace.trace(scr)
+    moon_trace.trace(scr)
+    planet_trace.trace(scr)
 
-    # planet.draw(scr)
-    # moon.draw(scr)
+    planet.draw(scr)
+    moon.draw(scr)
     # scr.blit(clover, (moon.position - Vec2(8, 8)).get())
 
     dial.draw(scr)
@@ -100,7 +96,7 @@ gui_font = pygame.freetype.SysFont(["Helvetica", "Futura"], 60, bold=True)
 # Game clock
 game_clock = pygame.time.Clock()
 
-# clover = pygame.image.load("ThreeLeafClover.png")
+# clover = pygame.image.load("")
 
 surf = pygame.Surface((40, 40), pygame.HWSURFACE | pygame.HWACCEL)
 surf.fill((120, 50, 50, 0))

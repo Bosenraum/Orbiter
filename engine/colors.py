@@ -3,16 +3,19 @@ import random
 
 BLACK = (0x00, 0x00, 0x00)
 WHITE = (0xFF, 0xFF, 0xFF)
-RED   = (0xFF, 0x00, 0x00)
+RED = (0xFF, 0x00, 0x00)
 GREEN = (0x00, 0xFF, 0x00)
-BLUE  = (0x00, 0x00, 0xFF)
+BLUE = (0x00, 0x00, 0xFF)
+YELLOW = (0xFF, 0xFF, 0x00)
+PURPLE = (0xFF, 0x00, 0xFF)
+CYAN = (0x00, 0xFF, 0xFF)
 
 # Reds
 coral_red = Color(254, 67, 60)
 razzmatazz = Color(243, 29, 100)
 
 # Pink
-pink = Color(255,192,203)
+pink = Color(255, 192, 203)
 
 # Greens
 dark_green = Color(0x00, 0x80, 00)
@@ -80,3 +83,8 @@ def get_random_color(r_lim=(0, 255), g_lim=(0, 255), b_lim=(0, 255)):
     b = random.randint(b_lim[0], b_lim[1])
     return Color(color_clamp((r, g, b)))
 
+
+def str_to_color(color_string):
+    str_list = color_string.strip("()").split(",")
+    int_list = [int(c) for c in str_list]
+    return Color(int_list)

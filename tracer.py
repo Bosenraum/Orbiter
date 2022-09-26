@@ -1,9 +1,8 @@
 import pygame
 import pygame.gfxdraw
 from enum import *
-import vector
-from utils import *
-from colors import *
+from engine.utils import *
+from engine.colors import *
 
 
 class TracerType(Enum):

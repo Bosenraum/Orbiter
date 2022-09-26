@@ -19,25 +19,23 @@ class Vec2:
         return f"({self._x}, {self._y})"
 
     def __add__(self, vec):
-        self.x += vec.x
-        self.y += vec.y
-        return self
+        return Vec2(self.x + vec.x, self.y + vec.y)
 
     def __sub__(self, vec):
-        self.x -= vec.x
-        self.y -= vec.y
-        return self
+        return Vec2(self.x - vec.x, self.y - vec.y)
 
     def __mul__(self, vec):
+        x = 0
+        y = 0
         if isinstance(vec, self.__class__):
-            self.x *= vec.x
-            self.y *= vec.y
+            x = self.x * vec.x
+            y = self.y * vec.y
         elif isinstance(vec, (int, float)):
-            self.x *= vec
-            self.y *= vec
+            x = self.x * vec
+            y = self.y * vec
         else:
             raise ValueError(f"Cannot multiply Vec2 by {type(vec)}")
-        return self
+        return Vec2(x, y)
 
     def __radd__(self, vec):
         return Vec2(self.x + vec.x, self.y + vec.y)

@@ -1,5 +1,5 @@
 import pygame
-from engine import *
+from engine.engine import *
 import math
 
 import copy
@@ -51,9 +51,10 @@ class Triangle:
         return Triangle(p, self.color, self.mesh_color)
 
     def normalize(self):
-        self.p[0] /= self.p[0].w
-        self.p[1] /= self.p[1].w
-        self.p[2] /= self.p[2].w
+        if self.p[0].w != 0:
+            self.p[0] /= self.p[0].w
+            self.p[1] /= self.p[1].w
+            self.p[2] /= self.p[2].w
 
     def offset(self, x, y, z):
         for p in self.p:
@@ -425,7 +426,7 @@ class ThreeDEngine(Engine):
         mat_camera = self.matrix_point_at(self.camera, v_target, v_up)
         mat_view = self.quick_inverse_matrix(mat_camera)
 
-        self.screen.fill(BLACK)
+        self.screen.fill(blend(alabaster, blue_violet))
         # Draw stuff
 
         tris_to_raster = []
@@ -466,7 +467,7 @@ class ThreeDEngine(Engine):
                 tri_viewed = self.multiply_tri_matrix(tri_transformed, mat_view)
                 tri_viewed.color = color
 
-                clipped = self.triangle_clip_against_plane(UNIT_VEC3_Z * 5, UNIT_VEC3_Z, tri_viewed)
+                clipped = self.triangle_clip_against_plane(UNIT_VEC3_Z * 0.1, UNIT_VEC3_Z, tri_viewed)
 
                 for n in clipped:
                     # ### PROJECTION ### #
@@ -482,13 +483,13 @@ class ThreeDEngine(Engine):
         for tri in tris_to_raster:
             # ### DRAW ### #
             clipped = []
-            tri_list = []
-            tri_list.append(tri)
+            tri_list = [tri]
             new_tris = 1
 
             for p in range(4):
                 while new_tris > 0:
-                    test = tri_list.pop()
+                    test = tri_list[0]
+                    tri_list.remove(tri_list[0])
                     new_tris -= 1
 
                     if p == 0:

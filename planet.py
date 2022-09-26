@@ -1,9 +1,8 @@
 import pygame
 import pygame.gfxdraw
-import random
 
-from vector import *
-from colors import *
+from engine.vector import *
+from engine.colors import *
 
 G = 1e-6
 

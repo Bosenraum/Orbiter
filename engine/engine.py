@@ -1,15 +1,9 @@
 import sys
-import random
-import math
 
-import pygame
 import pygame.freetype
 
-from colors import *
-from pixel import *
-from utils import *
+from engine.pixel import *
 from tracer import *
-from vector import *
 
 
 class Engine:
@@ -37,7 +31,7 @@ class Engine:
         self.tick = 1 / Engine.CLOCK_TICK
         self.et = 0
 
-        self.screen = pygame.display.set_mode((self.width, self.height))
+        self.screen = pygame.display.set_mode((self.width, self.height), pygame.RESIZABLE)
         self.pixels = []
         self.generate_pixels(width, height, pf)
 

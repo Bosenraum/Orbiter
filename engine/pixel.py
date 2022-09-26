@@ -1,5 +1,5 @@
 import pygame
-import colors
+import engine.colors as colors
 
 
 class Pixel:
