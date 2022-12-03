@@ -14,7 +14,7 @@ class Clickable(Drawable):
     def draw(self, scree):
         pass
 
-    def check_intersect(self, mouse_pos):
+    def check_intersect(self, pos):
         pass
 
     def click(self):

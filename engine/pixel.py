@@ -28,3 +28,12 @@ class Pixel:
     def draw(self, screen):
         self.rect = pygame.Rect(self.x * self.sf, self.y * self.sf, self.sf, self.sf)
         pygame.draw.rect(screen, self.on_color if self.state else colors.BLACK, self.rect)
+
+
+def generate_pixels(width, height, pf):
+    pixels = []
+    for w in range(width):
+        pixels.append([])
+        for h in range(height):
+            pixels[w].append(Pixel(w, h, colors.BLACK, pf))
+    return pixels

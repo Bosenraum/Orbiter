@@ -4,7 +4,7 @@ import pygame.gfxdraw
 import pygame.freetype
 # from pygame.locals import *
 
-from tracer import *
+from engine.tracer import *
 from planet import *
 from engine.utils import *
 from widgets.dial import Dial
@@ -16,33 +16,33 @@ def redraw(scr):
     # ########################
     scr.fill(bg_color)
 
-    nrects = 40
-    for i in range(nrects):
-        width = SCREEN_WIDTH / nrects
-        r = pygame.Rect(i * width, 0, width, SCREEN_HEIGHT)
-        color = color_span(blend(silver, outer_space), blend(pink, outer_space), i, nrects)
-        cr = int(abs(math.sin(et * math.pi / 6) * color[0] * 1 / 6)) + color[0] * 3 / 4
-        cg = int(abs(math.sin(et * math.pi / 4) * color[1] * 2 / 12)) + color[1] * 3 / 4
-        cb = int(abs(math.sin(et * math.pi / 2) * color[2] * 2 / 12)) + color[2] * 3 / 4
-        ca = int(abs(math.sin(et * math.pi / 8) * 100)) + 150
-        color = color_clamp((cr, cg, cb, ca))
-        # pygame.draw.rect(scr, color, r)
-        pygame.gfxdraw.box(scr, r, color)
+    # nrects = 40
+    # for i in range(nrects):
+    #     width = SCREEN_WIDTH / nrects
+    #     r = pygame.Rect(i * width, 0, width, SCREEN_HEIGHT)
+    #     color = color_span(blend(silver, silver), blend(pink, pink), i, nrects)
+    #     cr = int(abs(math.sin(et * math.pi / 6) * color[0] * 1 / 6)) + color[0] * 3 / 4
+    #     cg = int(abs(math.sin(et * math.pi / 4) * color[1] * 2 / 12)) + color[1] * 3 / 4
+    #     cb = int(abs(math.sin(et * math.pi / 2) * color[2] * 2 / 12)) + color[2] * 3 / 4
+    #     ca = int(abs(math.sin(et * math.pi / 8) * 100)) + 150
+    #     color = color_clamp((cr, cg, cb, ca))
+    #     # pygame.draw.rect(scr, color, r)
+    #     pygame.gfxdraw.box(scr, r, color)
 
     # Draw targets
     pygame.draw.circle(scr, target_color, target_pos.get(), target_radius, 10)
     pygame.draw.circle(scr, bullseye_color, bullseye_pos.get(), bullseye_radius, 10)
 
     # Draw moon trace
-    line_trace.trace(scr)
-    moon_trace.trace(scr)
-    planet_trace.trace(scr)
+    # line_trace.trace(scr)
+    # moon_trace.trace(scr)
+    # planet_trace.trace(scr)
 
     planet.draw(scr)
     moon.draw(scr)
     # scr.blit(clover, (moon.position - Vec2(8, 8)).get())
 
-    dial.draw(scr)
+    # dial.draw(scr)
 
     # GUI text
     gui_font.render_to(scr, (scr.get_width() / 3, scr.get_height() - 80), f"SCORE: {format(player_score, '07.2f')}", WHITE)

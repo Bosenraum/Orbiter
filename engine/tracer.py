@@ -1,8 +1,8 @@
 import pygame
 import pygame.gfxdraw
-from enum import *
-from engine.utils import *
-from engine.colors import *
+from enum import Enum, auto
+from engine.utils import clamp
+import engine.colors as colors
 
 
 class TracerType(Enum):
@@ -51,7 +51,7 @@ class Tracer:
         return color[0] * ff_dim, color[1] * ff_dim, color[2] * ff_dim
 
     def calc_color(self, i):
-        return color_span(self.color, self.end_color, i, len(self.data))
+        return colors.color_span(self.color, self.end_color, i, len(self.data))
 
     def trace(self, screen):
         if self.tracer_type == TracerType.POINT:

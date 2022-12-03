@@ -106,8 +106,8 @@ class Button(Serializable, Clickable):
         txt_y = (self.y + self.height * 0.5) - (txt[1].height * 0.5)
         font.render_to(screen, (txt_x, txt_y), self.text, BLACK)
 
-    def check_intersect(self, mouse_pos: Vec2):
-        return self._pos == mouse_pos or pygame.rect.Rect(self.x, self.y, self.width, self.height).collidepoint(mouse_pos.x, mouse_pos.y)
+    def check_intersect(self, pos: Vec2):
+        return self._pos == pos or pygame.rect.Rect(self.x, self.y, self.width, self.height).collidepoint(pos.x, pos.y)
 
     def unclick(self):
         if self.is_clicked:

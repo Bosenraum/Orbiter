@@ -17,6 +17,14 @@ def clamp(minimum, value, maximum):
     return value
 
 
+def deg_to_rad(angle_deg):
+    return angle_deg * math.pi / 180
+
+
+def rad_to_deg(angle_rad):
+    return angle_rad * 180 / math.pi
+
+
 # Calculate the angle (in radians) between a point and the x-axis of another point
 def calc_theta(pos1, pos2):
     dx = pos1.x - pos2.x
@@ -55,3 +63,19 @@ def calc_pos(r, theta, ref_pos):
 
 def in_ball(point: Vec2, ball_pos: Vec2, radius) -> bool:
     return calc_distance(point.get(), ball_pos.get()) <= radius
+
+
+def line_line_intersect(p0, p1, q0, q1):
+    x0 = p0.get()
+    x1 = p1.get()
+    y0 = q0.get()
+    y1 = q1.get()
+
+    d = (x1[0] - x0[0]) * (y1[1] - y0[1]) + (x1[1] - x0[1]) * (y0[0] - y1[0])
+    if d == 0:
+        return None
+    t = ((y0[0] - x0[0]) * (y1[1] - y0[1]) + (y0[1] - x0[1]) * (y0[0] - y1[0])) / d
+    u = ((y0[0] - x0[0]) * (x1[1] - x0[1]) + (y0[1] - x0[1]) * (x0[0] - x1[0])) / d
+    if 0 <= t <= 1 and 0 <= u <= 1:
+        return round(x1[0] * t + x0[0] * (1 - t)), round(x1[1] * t + x0[1] * (1 - t))
+    return None

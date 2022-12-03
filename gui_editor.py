@@ -1,6 +1,10 @@
 import pygame.key
+import random
+import sys
 
-from engine.engine import *
+from engine.engine import Engine
+from engine.vector import Vec2
+import engine.colors as colors
 
 from widgets.drawable import Drawable
 from widgets.serializable import Serializable
@@ -40,11 +44,11 @@ class GuiEditor(Engine):
             # Keyboard events
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_d:
-                    dial = Dial(mouse_x, mouse_y, 50, color=get_random_color())
+                    dial = Dial(mouse_x, mouse_y, 50, color=colors.get_random_color())
                     dial.value = random.randint(dial.min, dial.max)
                     self.clickable_items.append(dial)
                 if event.key == pygame.K_f:
-                    dial = Dial(mouse_x, mouse_y, 100, color=get_random_color())
+                    dial = Dial(mouse_x, mouse_y, 100, color=colors.get_random_color())
                     dial.value = 30
                     self.clickable_items.append(dial)
                 if event.key == pygame.K_x:
@@ -126,7 +130,7 @@ class GuiEditor(Engine):
             else:
                 item.unclick()
 
-        self.screen.fill(BLACK)
+        self.screen.fill(colors.BLACK)
         # Draw stuff
 
         for item in self.clickable_items:
