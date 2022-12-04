@@ -3,7 +3,6 @@ import math
 import random
 
 import pygame
-import inputs
 
 import engine.colors as colors
 from engine.engine import Engine
@@ -319,7 +318,6 @@ class LockPopper(Engine):
 
                 if event.key == pygame.K_F1:
                     self.lock.debug = not self.lock.debug
-
 
         # Simulate
         # Update the lock

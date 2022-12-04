@@ -20,6 +20,9 @@ class Spot(Drawable):
     def draw(self, screen):
         pygame.draw.rect(screen, self.color, pygame.rect.Rect(self.pos.x, self.pos.y, self.width, self.height), self.border_width)
 
+    def get_center(self):
+        return Vec2(self.pos.x + (self.width * 0.5), self.pos.y + (self.height * 0.5))
+
 
 class Maze(Drawable):
 
@@ -50,9 +53,12 @@ class Maze(Drawable):
             for j in range(self.num_cols):
                 pos = Vec2(i * self.spot_width, j * self.spot_height) + self.pos
                 color = colors.dark_green if (i % 2 == 0 and (j + 1) % 2 == 0) or ((i + 1) % 2 == 0 and j % 2 == 0) else colors.alabaster
-                maze[i].append(Spot(pos, self.spot_width, self.spot_height, color))
+                maze[i].append(Spot(pos, self.spot_width, self.spot_height, color, border_width=0))
 
         return maze
+
+    def get_spot(self, row, col):
+        return self.maze[row][col]
 
     def draw(self, screen):
         for row in self.maze:
@@ -67,6 +73,9 @@ class MazeEngine(Engine):
         self.debug = kwargs.get("debug", False)
 
         self.maze = None
+        self.player_pos = None
+        self.player_radius = None
+        self.player_color = None
 
         pf = 1
         super().__init__(width, height, pf)
@@ -103,6 +112,10 @@ class MazeEngine(Engine):
         h = spot_size.y * spots_per_row
         self.maze = Maze(Vec2(50, 50), w, h, spots_per_row, spots_per_col)
 
+        self.player_pos = Vec2(0, 0)
+        self.player_radius = min(spot_size.x, spot_size.y) * 0.75 * 0.5
+        self.player_color = colors.vivid_cerulean
+
     def on_update(self, et):
 
         event_list = pygame.event.get()
@@ -117,8 +130,30 @@ class MazeEngine(Engine):
             # Process mouse inputs
             self.process_mouse_inputs(event)
 
+            if event.type == pygame.JOYBUTTONDOWN:
+                if event.button == 6:
+                    sys.exit()
+
+            if event.type == pygame.JOYHATMOTION:
+                print(event)
+                self.player_pos.x += event.value[0]
+                self.player_pos.y += event.value[1] * -1
+                if self.player_pos.x < 0:
+                    self.player_pos.x = 0
+                elif self.player_pos.x >= self.maze.num_cols:
+                    self.player_pos.x = self.maze.num_cols - 1
+
+                if self.player_pos.y < 0:
+                    self.player_pos.y = 0
+                elif self.player_pos.y >= self.maze.num_rows:
+                    self.player_pos.y = self.maze.num_rows - 1
+
         self.screen.fill(colors.BLACK)
         self.maze.draw(self.screen)
+
+        player_spot = self.maze.get_spot(*self.player_pos.get())
+        pygame.draw.circle(self.screen, self.player_color, player_spot.get_center().get(), self.player_radius)
+
         pygame.display.update()
 
 

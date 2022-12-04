@@ -4,7 +4,7 @@ import pygame.freetype
 
 # from engine.pixel import generate_pixels
 from engine.timer import Timer, TickTimer
-import colors
+import engine.colors as colors
 
 
 class Engine:
@@ -19,6 +19,10 @@ class Engine:
     def __init__(self, width, height, pf):
         pygame.init()
         pygame.display.set_caption(self.APP_NAME)
+
+        # Set up controllers
+        pygame.joystick.init()
+        self.joysticks = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_count())]
 
         # Load fonts
         pygame.font.init()
