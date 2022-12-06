@@ -1,0 +1,23 @@
+{
+    "button_map": {
+        "A": 0,
+        "B": 1,
+        "X": 2,
+        "Y": 3,
+        "START": 7,
+        "SELECT": 6,
+        "RB": 5,
+        "LB": 4,
+        "RSTICK": 9,
+        "LSTICK": 8,
+        "HOME": 10
+    },
+    "axis_map": {
+        "RX": 2,
+        "RY": 3,
+        "LX": 0,
+        "LY": 1,
+        "RT": 5,
+        "LT": 4
+    }
+}

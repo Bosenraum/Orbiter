@@ -77,6 +77,8 @@ class MazeEngine(Engine):
         self.player_radius = None
         self.player_color = None
 
+        self.hat_input_ready = True
+
         pf = 1
         super().__init__(width, height, pf)
 
@@ -136,17 +138,25 @@ class MazeEngine(Engine):
 
             if event.type == pygame.JOYHATMOTION:
                 print(event)
-                self.player_pos.x += event.value[0]
-                self.player_pos.y += event.value[1] * -1
-                if self.player_pos.x < 0:
-                    self.player_pos.x = 0
-                elif self.player_pos.x >= self.maze.num_cols:
-                    self.player_pos.x = self.maze.num_cols - 1
+                x, y = event.value
 
-                if self.player_pos.y < 0:
-                    self.player_pos.y = 0
-                elif self.player_pos.y >= self.maze.num_rows:
-                    self.player_pos.y = self.maze.num_rows - 1
+                if self.hat_input_ready:
+                    self.player_pos.x += event.value[0]
+                    self.player_pos.y += event.value[1] * -1
+                    if self.player_pos.x < 0:
+                        self.player_pos.x = 0
+                    elif self.player_pos.x >= self.maze.num_cols:
+                        self.player_pos.x = self.maze.num_cols - 1
+
+                    if self.player_pos.y < 0:
+                        self.player_pos.y = 0
+                    elif self.player_pos.y >= self.maze.num_rows:
+                        self.player_pos.y = self.maze.num_rows - 1
+
+                    self.hat_input_ready = False
+                else:
+                    if x == 0 and y == 0:
+                        self.hat_input_ready = True
 
         self.screen.fill(colors.BLACK)
         self.maze.draw(self.screen)

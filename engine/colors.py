@@ -39,7 +39,16 @@ empty_beer = (246, 151, 23, 25)
 
 # Grays
 outer_space = Color(69, 69, 69)
-silver = Color(192,192,192)
+silver = Color(192, 192, 192)
+
+
+def get_gray(n):
+    try:
+        n = int(n)
+    except ValueError:
+        print(f"Bad value {n}. Setting to 128")
+        n = 128
+    return Color(n, n, n)
 
 
 def color_clamp(c):
