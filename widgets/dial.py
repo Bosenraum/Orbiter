@@ -3,18 +3,18 @@ import pygame.gfxdraw
 
 import math
 
-from engine.colors import *
+import engine.colors as colors
 from engine.vector import Vec2
 from engine.utils import in_ball
 
 import json
-from widgets.serializable import Serializable
-from widgets.drawable import Clickable
+from widgets.interfaces.ISerializable import ISerializable
+from widgets.interfaces.IDrawable import IClickable
 
 
-class Dial(Serializable, Clickable):
+class Dial(ISerializable, IClickable):
 
-    def __init__(self, xpos=0, ypos=0, radius=1, low=0, high=100, color=WHITE):
+    def __init__(self, xpos=0, ypos=0, radius=1, low=0, high=100, color=colors.WHITE):
         self.x = xpos
         self.y = ypos
         self._pos = Vec2(self.x, self.y)
@@ -54,8 +54,8 @@ class Dial(Serializable, Clickable):
         self.radius = attrs.get("radius", 1)
         self.min = attrs.get("min", 0)
         self.max = attrs.get("max", 100)
-        color_str = attrs.get("color", str(WHITE))
-        self.color = str_to_color(color_str)
+        color_str = attrs.get("color", str(colors.WHITE))
+        self.color = colors.str_to_color(color_str)
         self.value = attrs.get("value", self.min)
 
     @property

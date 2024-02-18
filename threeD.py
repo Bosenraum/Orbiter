@@ -444,7 +444,7 @@ class ThreeDEngine(Engine):
             # tri_translated.offset_z(z_offset)
 
             # tri_transformed = Triangle([
-            #     self.multiply_vector_matrix(p, mat_world) for p in tri.p
+            #     self.multiply_vector_matrix(origin, mat_world) for origin in tri.origin
             # ])
             # tri_transformed = tri_translated
             tri_transformed = self.multiply_tri_matrix(tri, mat_world)
@@ -479,7 +479,7 @@ class ThreeDEngine(Engine):
 
                     tris_to_raster.append(tri_projected)
 
-        tris_to_raster.sort(key=lambda t: (t.p[0].z + t.p[1].z + t.p[2].z) / 3.0, reverse=True)
+        tris_to_raster.sort(key=lambda t: (t.origin[0].z + t.origin[1].z + t.origin[2].z) / 3.0, reverse=True)
         for tri in tris_to_raster:
             # ### DRAW ### #
             clipped = []

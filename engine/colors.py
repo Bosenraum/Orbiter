@@ -1,5 +1,9 @@
+from dataclasses import dataclass
+
 from pygame import Color
 import random
+
+from engine.utils import clamp
 
 BLACK = (0x00, 0x00, 0x00)
 WHITE = (0xFF, 0xFF, 0xFF)
@@ -9,6 +13,15 @@ BLUE = (0x00, 0x00, 0xFF)
 YELLOW = (0xFF, 0xFF, 0x00)
 PURPLE = (0xFF, 0x00, 0xFF)
 CYAN = (0x00, 0xFF, 0xFF)
+
+
+# Blues
+byzantine = Color(162, 36, 173)
+grape = Color(106, 56, 179)
+violet_blue = Color(60, 80, 177)
+vivid_cerulean = Color(0, 149, 239)
+blue_violet = (138, 43, 226, 255)
+
 
 # Reds
 coral_red = Color(254, 67, 60)
@@ -20,13 +33,7 @@ pink = Color(255, 192, 203)
 # Greens
 dark_green = Color(0x00, 0x80, 00)
 
-# Blues
-byzantine = Color(162, 36, 173)
-grape = Color(106, 56, 179)
-violet_blue = Color(60, 80, 177)
-vivid_cerulean = Color(0, 149, 239)
-# blue_violet = Color(138,43,226)
-blue_violet = (138, 43, 226, 255)
+
 
 # Purples
 deep_purple = Color(88, 24, 69)
@@ -37,18 +44,58 @@ white_coffee = (228, 225, 209)
 beer = Color(246, 151, 23)
 empty_beer = (246, 151, 23, 25)
 
-# Grays
+# Greys
 outer_space = Color(69, 69, 69)
 silver = Color(192, 192, 192)
 
 
+@dataclass
+class Blue:
+    # Blues
+    byzantine = byzantine
+    grape = grape
+    violet_blue = violet_blue
+    vivid_cerulean = vivid_cerulean
+    blue_violet = blue_violet
+    start_blue = Color(60, 56, 242)
+    electric_blue = Color(134, 250, 242)
+
+
+@dataclass
+class Red:
+    end_red = Color(217, 66, 66)
+    failure_red = Color(110, 0, 4)
+
+
+@dataclass
+class Green:
+    open_set_green = Color(114, 186, 51)
+
+
+@dataclass
+class Purple:
+    closed_set_purple = Color(112, 27, 169)
+
+
+@dataclass
+class Grey:
+    background_grey = Color(202, 202, 202)
+    outline_black = Color(70, 70, 70)
+
+
+@dataclass
+class Yellow:
+    player_yellow = Color(255, 238, 43)
+
+
 def get_gray(n):
     try:
-        n = int(n)
+        n = int(clamp(0, n, 255))
+        color = Color(n, n, n)
     except ValueError:
         print(f"Bad value {n}. Setting to 128")
-        n = 128
-    return Color(n, n, n)
+        color = get_gray(128)
+    return color
 
 
 def color_clamp(c):
@@ -97,3 +144,5 @@ def str_to_color(color_string):
     str_list = color_string.strip("()").split(",")
     int_list = [int(c) for c in str_list]
     return Color(int_list)
+
+

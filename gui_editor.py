@@ -6,12 +6,10 @@ from engine.engine import Engine
 from engine.vector import Vec2
 import engine.colors as colors
 
-from widgets.drawable import Drawable
-from widgets.serializable import Serializable
+from widgets.interfaces.ISerializable import ISerializable
 from widgets.dial import Dial
 from widgets.button import Button
 
-import json
 import pickle
 
 
@@ -63,7 +61,7 @@ class GuiEditor(Engine):
                     # Serialize all items and save to a file
                     ser_out = []
                     for item in self.clickable_items:
-                        if not isinstance(item, Serializable):
+                        if not isinstance(item, ISerializable):
                             continue
                         ser_out.append(item.serialize())
 

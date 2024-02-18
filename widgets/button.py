@@ -2,18 +2,15 @@ import pygame
 import pygame.gfxdraw
 import pygame.draw
 
-import math
-
 from engine.colors import *
 from engine.vector import Vec2
 
 import json
-import pickle
-from widgets.serializable import Serializable
-from widgets.drawable import Clickable
+from widgets.interfaces.ISerializable import ISerializable
+from widgets.interfaces.IDrawable import IClickable
 
 
-class Button(Serializable, Clickable):
+class Button(ISerializable, IClickable):
 
     def __init__(self, text="", xpos=0, ypos=0, width=1, height=1, callback=None, shape="rect", color=WHITE, **kwargs):
         self.text = text

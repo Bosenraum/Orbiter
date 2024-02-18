@@ -1,6 +1,6 @@
 
 
-class Serializable:
+class ISerializable:
 
     def serialize(self):
         pass

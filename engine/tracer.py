@@ -10,16 +10,17 @@ class TracerType(Enum):
     POINT = auto()
     LINE = auto()
     PLINE = auto()
+    CIRCLE = auto()
 
 
 class Tracer:
 
-    def __init__(self, color, width, max_length, tracer_type=TracerType.POINT, *args, **kwargs):
+    def __init__(self, color, max_length, tracer_type=TracerType.POINT, *args, **kwargs):
 
         self.end_color = kwargs.get("end_color", color)
+        self.width = kwargs.get("width", 0)
 
         self.color = color
-        self.width = width
         self.max_length = max_length
         self.tracer_type = tracer_type
         self.data = []
@@ -70,5 +71,10 @@ class Tracer:
             for i, line in enumerate(self.data):
                 color = self.calc_color(i)
                 pygame.draw.line(screen, color, line[0], line[1], self.width)
+        elif self.tracer_type == TracerType.CIRCLE:
+            for i, circle_data in enumerate(self.data):
+                pos, radius = circle_data
+                color = self.calc_color(i)
+                pygame.draw.circle(screen, color, pos.get(), radius, self.width)
         else:
             print(f"Unknown tracer type! TT={self.tracer_type}")

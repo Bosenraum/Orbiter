@@ -4,7 +4,7 @@ import math
 # A simple class to hold the x and y component of a vector
 class Vec2:
 
-    def __init__(self, x, y):
+    def __init__(self, x, y=None):
         if y is None:
             y = x[1]
             x = x[0]
@@ -37,6 +37,22 @@ class Vec2:
             raise ValueError(f"Cannot multiply Vec2 by {type(vec)}")
         return Vec2(x, y)
 
+    def __truediv__(self, other):
+        # print(f"Division!")
+        try:
+            if isinstance(other, Vec2):
+                return Vec2(self.x / other.x, self.y / other.y)
+            elif isinstance(other, (int, float)):
+                return Vec2(self.x / other, self.y / other)
+        except ZeroDivisionError:
+            print(f"Cannot divide by zero: ({other.x}, {other.y})")
+
+    # def __rdiv__(self, other):
+    #     try:
+    #         return Vec2(other.x / self.x, other.y / self.y)
+    #     except ZeroDivisionError:
+    #         print(f"Cannot divide by zero: ({self.x}, {self.y})")
+
     def __radd__(self, vec):
         return Vec2(self.x + vec.x, self.y + vec.y)
 
@@ -45,6 +61,12 @@ class Vec2:
 
     def __getitem__(self, item):
         return self._item_list[item]
+
+    def __rmul__(self, other):
+        if isinstance(other, Vec2):
+            pass
+        elif isinstance(other, (int, float)):
+            return Vec2(self.x * other, self.y * other)
 
     def get(self):
         return self._x, self._y

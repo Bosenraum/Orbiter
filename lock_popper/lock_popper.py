@@ -9,11 +9,12 @@ from engine.engine import Engine
 from engine.vector import Vec2
 import engine.utils as utils
 from engine.tracer import Tracer
+from engine.controller import Controller
 
-from widgets.drawable import Drawable
+from widgets.interfaces.IDrawable import IDrawable
 
 
-class Lock(Drawable):
+class Lock(IDrawable):
     STARTING_COLOR = colors.GREEN
     MID_COLOR = colors.PURPLE
     END_COLOR = colors.RED
@@ -70,6 +71,8 @@ class Lock(Drawable):
         self.tumbler_angle_rad = 0
         self.in_tumbler = False
 
+        self.start_button = "SPACE"
+
         self.hits_remaining = Lock.STARTING_HITS
 
         self.font_size = int(radius)
@@ -124,7 +127,6 @@ class Lock(Drawable):
             self.palette = Lock.STARTING_PALETTE
         else:
             print(f"Unknown palette! {self.palette}")
-
 
     def update(self):
         if not self.running:
@@ -248,7 +250,7 @@ class Lock(Drawable):
             pygame.draw.circle(screen, self.palette["tumbler"], self.tumbler_pos.get(), self.tumbler_radius)
 
         else:
-            menu_str = f"PRESS [SPACE] TO START"
+            menu_str = f"PRESS [{self.start_button}] TO START"
             if self.win:
                 menu_str = f"YOU WIN!"
 
@@ -276,6 +278,10 @@ class LockPopper(Engine):
     def __init__(self, width, height):
         # Do custom init stuff
         self.lock = None
+        self.controller = None
+        self.input_mode = "KEYBOARD"
+        self.joy_events = [pygame.JOYBUTTONDOWN, pygame.JOYBUTTONUP, pygame.JOYHATMOTION, pygame.JOYAXISMOTION, pygame.JOYBALLMOTION]
+        self.key_events = [pygame.KEYDOWN, pygame.KEYUP, pygame.MOUSEMOTION, pygame.MOUSEWHEEL, pygame.MOUSEBUTTONUP, pygame.MOUSEBUTTONDOWN]
 
         # Call engine init to start main loop
         pf = 1
@@ -283,6 +289,12 @@ class LockPopper(Engine):
 
     def on_start(self):
         self.lock = Lock(self.width * 0.5, self.height * 0.5, min(self.width, self.height) * 0.4, debug=False)
+        joystick = None
+        if self.joysticks:
+            joystick = self.joysticks[0]
+            joystick.init()
+
+        self.controller = Controller(joystick)
 
     def on_update(self, et):
         # Game loop
@@ -297,7 +309,32 @@ class LockPopper(Engine):
             if self.engTimers[LockPopper.INPUT_LOCKOUT_TIMER].is_running():
                 # print(f"Timer running! {self.engTimer0.get()} left.")
                 continue
+
+            if event.type == pygame.JOYDEVICEADDED:
+                joystick = pygame.joystick.Joystick(pygame.joystick.get_count() - 1)
+                joystick.init()
+                self.controller.set_joystick(joystick)
+
+            if event.type in self.joy_events:
+                self.input_mode = "CONTROLLER"
+                self.lock.start_button = "A"
+
+            if event.type == pygame.JOYBUTTONDOWN:
+                print(event)
+                if event.button == self.controller.button_map["A"]:
+                    result = self.lock.check()
+                    if not result:
+                        self.engTimers[LockPopper.INPUT_LOCKOUT_TIMER].set(0.5)
+
+                if event.button == self.controller.button_map["B"]:
+                    self.lock.next_palette()
+
+            if event.type in self.key_events:
+                self.input_mode = "KEYBOARD"
+                self.lock.start_button = "SPACE"
+
             if event.type == pygame.KEYDOWN:
+
                 if event.key == pygame.K_SPACE:
                     result = self.lock.check()
                     if not result:

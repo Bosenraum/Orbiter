@@ -1,17 +1,17 @@
 
 
-class Drawable:
+class IDrawable:
 
     def draw(self, screen):
         pass
 
 
-class Clickable(Drawable):
+class IClickable(IDrawable):
 
     def __init__(self):
         self.is_clicked = False
 
-    def draw(self, scree):
+    def draw(self, screen):
         pass
 
     def check_intersect(self, pos):

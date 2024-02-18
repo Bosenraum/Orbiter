@@ -5,10 +5,10 @@ from engine.engine import Engine
 import engine.colors as colors
 from engine.vector import Vec2
 
-from widgets.drawable import Drawable
+from widgets.interfaces.IDrawable import IDrawable
 
 
-class Spot(Drawable):
+class Spot(IDrawable):
 
     def __init__(self, pos: Vec2, width, height, color, border_width=0):
         self.pos = pos
@@ -24,7 +24,7 @@ class Spot(Drawable):
         return Vec2(self.pos.x + (self.width * 0.5), self.pos.y + (self.height * 0.5))
 
 
-class Maze(Drawable):
+class Maze(IDrawable):
 
     def __init__(self, pos: Vec2, width, height, num_rows, num_cols):
         self.pos = pos
@@ -77,7 +77,8 @@ class MazeEngine(Engine):
         self.player_radius = None
         self.player_color = None
 
-        self.hat_input_ready = True
+        self.last_hat_value = None
+        self.hat_input = [0, 0]
 
         pf = 1
         super().__init__(width, height, pf)
@@ -139,10 +140,12 @@ class MazeEngine(Engine):
             if event.type == pygame.JOYHATMOTION:
                 print(event)
                 x, y = event.value
-
-                if self.hat_input_ready:
-                    self.player_pos.x += event.value[0]
-                    self.player_pos.y += event.value[1] * -1
+                if event.value != (0, 0):
+                    self.hat_input[0] = x if x else self.hat_input[0]
+                    self.hat_input[1] = y if y else self.hat_input[1]
+                else:
+                    self.player_pos.x += self.hat_input[0]
+                    self.player_pos.y += self.hat_input[1] * -1
                     if self.player_pos.x < 0:
                         self.player_pos.x = 0
                     elif self.player_pos.x >= self.maze.num_cols:
@@ -152,11 +155,7 @@ class MazeEngine(Engine):
                         self.player_pos.y = 0
                     elif self.player_pos.y >= self.maze.num_rows:
                         self.player_pos.y = self.maze.num_rows - 1
-
-                    self.hat_input_ready = False
-                else:
-                    if x == 0 and y == 0:
-                        self.hat_input_ready = True
+                    self.hat_input = [0, 0]
 
         self.screen.fill(colors.BLACK)
         self.maze.draw(self.screen)
