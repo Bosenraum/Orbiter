@@ -59,6 +59,7 @@ class Blue:
     blue_violet = blue_violet
     start_blue = Color(60, 56, 242)
     electric_blue = Color(134, 250, 242)
+    ocean = Color(65, 105, 225)
 
 
 @dataclass
@@ -70,6 +71,7 @@ class Red:
 @dataclass
 class Green:
     open_set_green = Color(114, 186, 51)
+    grass = Color(124, 252, 0)
 
 
 @dataclass
@@ -86,6 +88,12 @@ class Grey:
 @dataclass
 class Yellow:
     player_yellow = Color(255, 238, 43)
+    goldenrod = Color(218, 165, 32)
+
+
+@dataclass
+class Brown:
+    saddle_brown = Color(139, 69, 19)
 
 
 def get_gray(n):

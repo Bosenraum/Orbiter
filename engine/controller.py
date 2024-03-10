@@ -97,7 +97,7 @@ class Controller:
 
         self.update()
 
-    # Update internal state based on event data
+    # Update internal states based on event data
     def process_event(self, event):
         pass
 
@@ -136,7 +136,7 @@ class Controller:
             print(f"Hat map: {self.hat_map}")
             raise HatException(hat_name)
 
-    # Capture current state of everything in our maps
+    # Capture current states of everything in our maps
     def update(self):
         self.button_states = self.get_button_vals()
         self.axis_states = self.get_axis_vals()

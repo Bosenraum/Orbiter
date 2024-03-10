@@ -124,5 +124,7 @@ class Dial(ISerializable, IClickable):
         for i in range(self.radius):
             pygame.gfxdraw.pie(screen, self.x, self.y, self.radius-i, -90, int(angle_deg - 90), self.color)
 
-    def check_intersect(self, mouse_pos):
-        in_ball(self.pos, mouse_pos, self.radius)
+    def check_intersect(self, pos):
+        if not isinstance(pos, Vec2):
+            pos = Vec2(pos)
+        in_ball(self.pos, pos, self.radius)

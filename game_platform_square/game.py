@@ -256,11 +256,11 @@ class GamePlatformSquare(Engine):
             elif event.type in Engine.MOUSE_EVENTS:
                 self.process_mouse_inputs(event)
             elif event.type in Engine.CONTROLLER_EVENTS:
-                # Event based controller state
+                # Event based controller states
                 if self.controller:
                     self.process_controller_events(event)
 
-        # Non-event based controller state
+        # Non-event based controller states
         if self.controller:
             self.process_controller_inputs()
 

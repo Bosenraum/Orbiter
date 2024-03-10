@@ -40,8 +40,14 @@ class Engine:
         self.pf = pf
 
         self.clock = pygame.time.Clock()
-        self.tick = 1 / Engine.CLOCK_TICK
+        self.fps = 0
+        if self.CLOCK_TICK == 0:
+            self.tick = 0
+        else:
+            self.tick = 1 / Engine.CLOCK_TICK
         self.et = 0
+
+        self.dt_stack = []
 
         self.numEngTimers = 4
         self.numTickTimers = 4
@@ -98,8 +104,16 @@ class Engine:
         self.et = 0
         # Main game loop
         while True:
-            self.clock.tick(self.CLOCK_TICK)
-            self.et += self.tick
+            if self.tick > 0:
+                self.clock.tick(self.CLOCK_TICK)
+                self.et += self.tick
+            else:
+                dt = self.clock.tick()
+                self.dt_stack.append(dt)
+                if len(self.dt_stack) > 30:
+                    self.dt_stack.pop(0)
+                self.fps = 1000 / (sum(self.dt_stack) / len(self.dt_stack))
+                self.et += dt
 
             # Tick engine timers
             for engTimer, tickTimer in zip(self.engTimers, self.tickTimers):
