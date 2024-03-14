@@ -78,19 +78,16 @@ class HexEngine(Engine):
         self.active_dial_pos = None
 
         self.clicked_tile = None
-        self.selected_tile = None
-        self.old_tile_rep = None
-
-        self.ocean_dial = None
-        self.ocean_dial_pos = None
-        self.ocean_dial_active = None
-
-        self.beach_dial = None
-        self.beach_dial_pos = None
-        self.beach_dial_active = None
+        self.last_clicked_tile = None
 
         self.game_input = None
         self.state_machine = None
+
+        self.grid_surface = None
+        self.ribbon_surface = None
+        self.debug_surface = None
+
+        self.do_once = True
 
         self.seed = 43
 
@@ -108,6 +105,9 @@ class HexEngine(Engine):
 
         if ev.key == pygame.K_F3:
             GlobalTileProperties.debug = not GlobalTileProperties.debug
+
+        if ev.key == pygame.K_F4:
+            self.do_once = True
 
         if ev.key == pygame.K_x:
             self.invert_x *= -1
@@ -130,14 +130,6 @@ class HexEngine(Engine):
         if ev.key == pygame.K_s:
             self.seed -= 10
             self.reset()
-
-        if ev.key == pygame.K_b:
-            self.ocean_dial_active = not self.ocean_dial_active
-            self.beach_dial_active = False
-
-        if ev.key == pygame.K_g:
-            self.beach_dial_active = not self.beach_dial_active
-            self.ocean_dial_active = False
 
         if ev.key == pygame.K_SPACE:
             self.reset()
@@ -163,25 +155,24 @@ class HexEngine(Engine):
                 self.init_offset = self.hexgrid.get_offset()
 
             if m1:
-                t = self.hexgrid.check_tile_intersect(self.mouse_pos)
-                if t:
-                    if self.clicked_tile and self.old_tile_rep:
-                        self.clicked_tile.set_representation(self.old_tile_rep)
 
-                    self.old_tile_rep = t.representation
-                    self.clicked_tile = t
+                if self.clicked_tile:
+                    clicked_rep = TileRepresentation(self.clicked_tile.position, color=colors.BLACK)
+                    self.clicked_tile.set_representation(clicked_rep)
+                    self.clicked_tile.draw(self.grid_surface)
+
+                    # for n in self.clicked_tile.get_neighbors():
+                    for n in self.hexgrid.get_neighbors(self.clicked_tile, depth=1):
+                        neighbor_rep = TileRepresentation(n.position, color=colors.WHITE)
+                        n.set_representation(neighbor_rep)
+                        n.draw(self.grid_surface)
 
         if ev.type == pygame.MOUSEBUTTONUP:
             self.mouse_down = m1
 
         if ev.type == pygame.MOUSEWHEEL:
             # Mousewheel events
-            if self.ocean_dial_active:
-                self.ocean_dial.inc(ev.y)
-            elif self.beach_dial_active:
-                self.beach_dial.inc(ev.y)
-            else:
-                self.hexgrid.zoom(ev.y)
+            self.hexgrid.zoom(ev.y)
 
         if ev.type == pygame.MOUSEMOTION:
             # Mouse motion events
@@ -196,8 +187,13 @@ class HexEngine(Engine):
             pass
 
     def reset(self):
+        # self.grid_surface = pygame.surface.Surface((self.width, self.height - 200))
+        self.grid_surface = self.screen.subsurface((0, 150, self.width, self.height - 200))
+        self.ribbon_surface = self.screen.subsurface(0, 0, self.width, 150)
+        # self.debug_surface = self.screen.subsurface((0, self.height - 100, self.width, 200))
+
         if self.use_grid:
-            self.hexgrid = HexGrid(50, 50, clip_plane=(self.width, self.height), seed=self.seed)
+            self.hexgrid = HexGrid(self.grid_surface.get_offset(), 50, 50, clip_plane=self.grid_surface.get_size(), seed=self.seed)
         else:
             self.hexgraph = HexGraph(40)
 
@@ -206,14 +202,6 @@ class HexEngine(Engine):
         self.init_offset = (0, 0)
 
         self.dial_radius = 50
-
-        self.ocean_dial_pos = int(self.width - 1.5 * self.dial_radius), int(self.height - 1.5 * self.dial_radius)
-        self.ocean_dial = Dial(self.ocean_dial_pos[0], self.ocean_dial_pos[1], self.dial_radius, 0, 100, colors.BLUE)
-        self.ocean_dial.set(self.hexgrid.bands["ocean"].elevation)
-
-        self.beach_dial_pos = int(self.ocean_dial_pos[0] - 2.5 * self.dial_radius), int(self.height - 1.5 * self.dial_radius)
-        self.beach_dial = Dial(self.beach_dial_pos[0], self.beach_dial_pos[1], self.dial_radius, 0, 100, colors.GREEN)
-        self.beach_dial.set(self.hexgrid.bands["beach"].elevation)
 
         self.game_input = GameInput()
         self.state_machine = StateMachine(self.screen, self.game_input)
@@ -253,37 +241,21 @@ class HexEngine(Engine):
 
         self.screen.blit(debug_surface, (10, self.height - debug_surface.get_height() - 10))
 
+    def draw_debug(self):
+        if self.debug:
+            self.draw_info()
+
     def draw_sim(self):
         # Draw start/end
         if self.use_grid:
-            self.hexgrid.draw(self.screen)
+            self.hexgrid.draw(self.grid_surface)
         else:
             self.hexgraph.draw(self.screen)
 
-        if self.clicked_tile:
-            clicked_rep = TileRepresentation(self.clicked_tile.position, color=colors.BLACK)
-            self.clicked_tile.set_representation(clicked_rep)
-
-        if self.debug:
-            self.draw_info()
-            self.ocean_dial.draw(self.screen)
-            self.beach_dial.draw(self.screen)
-
-            if self.ocean_dial_active:
-                pygame.draw.circle(self.screen, colors.BLUE, self.ocean_dial_pos, self.dial_radius + 10, 10)
-            if self.beach_dial_active:
-                pygame.draw.circle(self.screen, colors.GREEN, self.beach_dial_pos, self.dial_radius + 10, 10)
+        pygame.draw.rect(self.ribbon_surface, colors.Red.end_red, self.ribbon_surface.get_rect(), width=10)
+        # self.screen.blit(self.grid_surface, (0, 200))
 
     def run_sim(self):
-
-        # if self.ocean_dial_active:
-        #     self.ocean_dial.set(self.ocean_dial.value + (self.ocean_dial_pos[1] - self.click_pos[1]))
-
-        if self.ocean_dial_active or self.beach_dial_active:
-            ocean_mod = int(math.sin(self.et * .001) * 8)
-            ocean_mod = 0
-            self.hexgrid.set_bands({"ocean": self.ocean_dial.value + ocean_mod, "beach": self.beach_dial.value})
-        # self.hexgrid.beach_band = self.ocean_dial.value + 15
 
         if self.mouse_down:
             # offset the grid by the delta between where the mouse was clicked and where the mouse is now
@@ -291,8 +263,6 @@ class HexEngine(Engine):
             delta_y = self.mouse_pos[1] - self.click_pos[1] + self.init_offset[1]
             delta_pos = self.invert_x * delta_x, self.invert_y * delta_y
             self.hexgrid.move(delta_pos)
-
-
 
     def on_update(self, et):
         m1, m2, m3 = pygame.mouse.get_pressed(3)
@@ -317,7 +287,8 @@ class HexEngine(Engine):
         self.run_sim()
 
         self.draw_sim()
-        self.state_machine.step()
+        self.draw_debug()
+        # self.state_machine.step()
 
         pygame.display.update()
 

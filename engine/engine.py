@@ -67,9 +67,13 @@ class Engine:
             return po
         return None
 
-    def draw_debug(self, text, color, posx, posy):
-        img, img_rect = self.debug_font.render(text, True, color)
+    def quick_text(self, text, posx, posy):
+        img, img_rect = self.debug_font.render(text, colors.WHITE, colors.BLACK)
         self.screen.blit(img, (posx, posy))
+
+    # def draw_debug(self, text, color, posx, posy):
+    #     img, img_rect = self.debug_font.render(text, True, color)
+    #     self.screen.blit(img, (posx, posy))
 
     def process_key_inputs(self, ev: pygame.event.Event):
         pass

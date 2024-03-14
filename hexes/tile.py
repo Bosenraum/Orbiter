@@ -43,74 +43,70 @@ class TileSides:
 # TODO: Make a tile factory
 class Tile:
 
-    MAX_NEIGHBORS = 6
-    reverse_index_map = {
-        TileSides.TR: TileSides.BL,
-        TileSides.R: TileSides.L,
-        TileSides.BR: TileSides.TL,
-        TileSides.BL: TileSides.TR,
-        TileSides.L: TileSides.R,
-        TileSides.TL: TileSides.BR
-    }
-
-    def __init__(self, representation: TileRepresentation = None, function: TileFunction = None):
+    def __init__(self, row, col, representation: TileRepresentation = None, function: TileFunction = None):
+        self.row = row
+        self.col = col
         self.id = TileIDService.inc_id()
-        self.representation = representation if representation else TileRepresentation((0, 0), color=(0xFF, 0, 0))
-        self.function = function if function else TileFunction()
 
-        self.representation.id = self.id
+        default_rep = TileRepresentation((0, 0), color=(0xFF, 0, 0))
+        self.representation = [representation if representation else default_rep]
+
+        default_func = TileFunction()
+        self.function = [function if function else default_func]
 
         # Define a convention, list starts with top right side and moves around clockwise
-        self.neighbors = [None for _ in range(self.MAX_NEIGHBORS)]
+        # self.neighbors = [None for _ in range(self.MAX_NEIGHBORS)]
+        self.neighbors: {Tile} = set()
 
     def __repr__(self):
         return str(self.id)
 
-    @staticmethod
-    def reverse_index(index):
-        # given a hex index, return the connecting index
-        return Tile.reverse_index_map[index]
+    def add_neighbor(self, neighbor):
+        if not isinstance(neighbor, self.__class__):
+            return False
 
-    def add_neighbor(self, neighbor, index):
-        if neighbor and not self.neighbors[index]:
-            self.neighbors[index] = neighbor
+        self.neighbors.add(neighbor)
+        # if self not in neighbor.neighbors:
+        #     neighbor.add_neighbor(self)
+
+        return True
+
+    def get_neighbors(self):
+        if self.neighbors:
+            return list(self.neighbors)
         else:
-            print(f"Error adding neighbor {neighbor}")
+            return []
 
     def remove_neighbor(self, neighbor):
-        self.neighbors.pop(neighbor.id)
-
-    def get_first_open_neighbor_index(self):
-        for i, n in enumerate(self.neighbors):
-            if not n:
-                return i
-
-    @property
-    def open_sides(self):
-        return self.neighbors.count(None)
+        self.neighbors.remove(neighbor)
 
     @property
     def position(self):
-        return self.representation.position
+        return self.representation[0].position
 
     def get_center(self):
-        return self.representation.get_center()
+        return self.representation[0].position
 
     def activate(self):
-        self.function.activate()
+        self.function[0].activate()
 
     def get_elevation(self):
-        return self.function.elevation
+        return self.function[0].elevation
 
     def set_band(self, band):
         self.function.band = band
         self.representation.color = band.color
 
     def intersect(self, position) -> bool:
-        return self.representation.intersect(position)
+        return self.representation[0].intersect(position)
 
-    def set_representation(self, rep: TileRepresentation):
-        self.representation = rep
+    def add_representation(self, rep: TileRepresentation):
+        if rep:
+            self.representation.insert(0, rep)
 
-    def draw(self, screen):
-        self.representation.draw(screen)
+    def remove_representation(self):
+        if len(self.representation) > 1:
+            self.representation.pop(0)
+
+    def draw(self, screen, offset=(0, 0)):
+        self.representation[0].draw(screen, offset)
