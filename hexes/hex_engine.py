@@ -193,7 +193,9 @@ class HexEngine(Engine):
         # self.debug_surface = self.screen.subsurface((0, self.height - 100, self.width, 200))
 
         if self.use_grid:
-            self.hexgrid = HexGrid(self.grid_surface.get_offset(), 50, 50, clip_plane=self.grid_surface.get_size(), seed=self.seed)
+            self.hexgrid = HexGrid(self.grid_surface.get_offset(), 50, 50,
+                                   clip_plane=self.grid_surface.get_size(),
+                                   seed=self.seed)
         else:
             self.hexgraph = HexGraph(40)
 

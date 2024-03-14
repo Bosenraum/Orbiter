@@ -194,20 +194,19 @@ class HexGrid:
     def draw(self, screen):
         for tile in self.iterate_tiles():
 
-            x_offset, y_offset = self.get_tile_offset(tile.row, tile.col)
-            if not self.clip(tile):
-                tile.draw(screen, (x_offset, y_offset))
+            tile_pos = self.get_tile_offset(tile.row, tile.col)
+            if not self.clip(tile_pos):
+                tile.draw(screen, tile_pos)
 
         GlobalTileProperties.recalc_needed = False
 
-    def clip(self, tile):
-        return False
+    def clip(self, tile_pos):
 
         if self.clip_plane is None:
             return False
 
-        tx = tile.get_center()[0]
-        ty = tile.get_center()[1]
+        tx = tile_pos[0]
+        ty = tile_pos[1]
         side_length = GlobalTileProperties.side_length
 
         x_inbounds = 0 - side_length < tx < self.clip_plane[0] + side_length
